@@ -39,6 +39,12 @@ The suites are:
     tests/_audit.cjs          contrast of every text node, hit targets, type floors
     tests/_debug_layout.cjs   the left-edge grid at two viewports
 
+CI runs that same command in three shapes: Python 3.9 on Windows and Ubuntu 22.04
+(the declared floor, where a runner can still install it), Python 3.12 on Linux,
+macOS and Windows, and Python 3.13 as a canary that is allowed to fail. Ubuntu 26.04
+has no 3.9 build and macOS arm64 never had one, which is why the floor is not proven
+on those runners.
+
 Against your own running Strata, point them at it instead:
 
     python tests/_test_lite.py http://127.0.0.1:8899 <your token>
