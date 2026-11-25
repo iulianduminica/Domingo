@@ -1,0 +1,8 @@
+name: ""
+description: ""
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Pick a template above. For a security problem, do not open an issue: use
+        the private advisory linked in SECURITY.md.

@@ -1,0 +1,35 @@
+# Runtime config holds a shared token and, in remote mode, the model's API key.
+# It is never committed. domingo.example.json shows the shape.
+domingo.json
+domingo.*.json
+!domingo.example.json
+.domingo.json
+.strata-lite.json
+strata-lite*.json
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.mypy_cache/
+.ruff_cache/
+*.egg-info/
+
+# Node, for the dev-only browser suites
+node_modules/
+
+# Test and build output
+tmp/
+*.log
+.pytest_cache/
+dist/
+build/
+
+# OS and editor noise
+.DS_Store
+._*
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/

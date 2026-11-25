@@ -1,0 +1,52 @@
+name: Feature request
+description: An idea for what Domingo could do
+title: "[feature] "
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This is one person's tool that runs on their own machines. Ideas that fit
+        that shape get built. Say what you are trying to do, and I will tell you
+        straight whether it belongs here.
+  - type: textarea
+    id: problem
+    attributes:
+      label: What you are trying to do
+      description: The situation, not the solution.
+      placeholder: |
+        I chat from my phone in the evening and the composer is hard to use with
+        one thumb.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What you think should change
+    validations:
+      required: true
+  - type: textarea
+    id: now
+    attributes:
+      label: What you do today instead
+      description: A workaround that already exists is useful information.
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Where it belongs
+      options:
+        - The interface
+        - The server
+        - Both
+        - Setup and documentation
+    validations:
+      required: true
+  - type: checkboxes
+    id: limits
+    attributes:
+      label: Constraints this project keeps
+      options:
+        - label: One Python file, standard library only, no dependencies
+        - label: One HTML file for the client, no build step
+        - label: Single user, single shared token, no accounts
+        - label: Sampling settings stay in the model server, not here

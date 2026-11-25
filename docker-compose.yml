@@ -1,0 +1,30 @@
+services:
+  domingo:
+    build: .
+    image: iulianduminica/domingo:0.2.0
+    # The container binds loopback inside its own network namespace, so the port
+    # mapping is what makes it reachable. Keep the token: it is the only thing
+    # between the mapped port and your model.
+    environment:
+      DOMINGO_HOST: 0.0.0.0
+      DOMINGO_PORT: "8899"
+      DOMINGO_TOKEN: "replace-me-with-a-long-secret"
+      # The model server. On Linux use the host's loopback through the gateway
+      # name below; on Docker Desktop host.docker.internal works out of the box.
+      DOMINGO_URL: "http://host.docker.internal:18500"
+      DOMINGO_KEY: ""
+      DOMINGO_NAME: "domingo container"
+    ports:
+      - "8899:8899"
+    volumes:
+      - ./data:/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8899/healthz',timeout=4).status==200 else 1)"]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3

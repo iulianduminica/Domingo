@@ -1,0 +1,27 @@
+{
+  "_comment": "Copy this to domingo.json next to domingo.py and fill it in. Never commit the result: it holds your token.",
+
+  "name": "my windows pc",
+  "host": "127.0.0.1",
+  "port": 8899,
+  "token": "a secret you make up, at least 16 characters",
+
+  "url": "http://127.0.0.1:18500",
+  "key": "the model server's API key, if it uses one",
+  "model": "",
+
+  "advertise": "https://your-machine.ts.net:8443",
+  "open": true,
+
+  "_fields": {
+    "name": "label shown in the sidebar",
+    "host": "what to bind. 127.0.0.1 is the default and the safe one",
+    "port": "the UI port",
+    "token": "required by every device that connects. Domingo refuses to bind a shared address, or to advertise one, without it",
+    "url": "the model server. Leave out to let Domingo find a local Strata on its own",
+    "key": "the model server's key. It stays on this machine and is never sent to a browser",
+    "model": "model id to select by default. Leave out to take the server's first model",
+    "advertise": "the address your other devices use, when a proxy such as Tailscale Serve forwards to this port",
+    "open": "open a browser on start"
+  }
+}

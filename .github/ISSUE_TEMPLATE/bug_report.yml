@@ -1,0 +1,89 @@
+name: Bug report
+description: Something does not do what it should
+title: "[bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Tell me what happened, on what machine, and how to make it happen again.
+        Do not paste your token, your tailnet hostname, or your model's API key.
+        Redact them.
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you did, what you saw, what you expected instead.
+      placeholder: |
+        Started the server on Windows, opened the page from my MacBook, sent a
+        message, and the answer never arrived. The status pill stayed green.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: The exact commands and clicks, in order.
+      placeholder: |
+        1. run.cmd
+        2. open https://<redacted>.ts.net:8443/?t=<redacted> on the Mac
+        3. type "hello", press Enter
+    validations:
+      required: true
+  - type: textarea
+    id: output
+    attributes:
+      label: Server output
+      description: The terminal window from the start, including the banner. Redact secrets.
+      render: text
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: The first line the server prints, or the version in the About dialog.
+      placeholder: Domingo 0.2.0
+    validations:
+      required: true
+  - type: dropdown
+    id: os
+    attributes:
+      label: Server machine
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Docker
+    validations:
+      required: true
+  - type: input
+    id: python
+    attributes:
+      label: Python version on the server
+      placeholder: 3.12.15
+  - type: dropdown
+    id: client
+    attributes:
+      label: Device you chat from
+      multiple: true
+      options:
+        - macOS browser
+        - Windows browser
+        - iPhone or iPad
+        - Android
+        - The server machine itself
+  - type: textarea
+    id: browser
+    attributes:
+      label: Browser and console errors
+      description: Open dev tools, look at the console, paste anything red.
+  - type: checkboxes
+    id: tests
+    attributes:
+      label: Things to check first
+      options:
+        - label: The server prints a model and an upstream URL at startup
+        - label: "/healthz answers 200 on the server's own address"
+        - label: The token in the URL is the one in domingo.json
+        - label: "python tools/ci-run.py passes on this checkout"

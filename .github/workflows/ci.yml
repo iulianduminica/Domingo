@@ -1,0 +1,125 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  # The supported floor. Every job here runs the real server, the stand-in engine
+  # and every suite, on Linux, macOS and Windows.
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.9"]
+    runs-on: ${{ matrix.os }}
+    name: ${{ matrix.os }} · Python ${{ matrix.python }}
+    env:
+      DOMINGO_CI: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+
+      # After setup-python on purpose: runners ship old system Pythons, and a
+      # version check placed before the install fails the build for no reason.
+      - name: Check the runtime
+        shell: bash
+        run: python -c "import sys; v=sys.version_info; sys.exit(0 if v >= (3,9) else ('Python 3.9+ required, got %d.%d' % v[:2]))"
+
+      - name: Install dev dependencies
+        run: python -m pip install --upgrade pip && pip install -r requirements-dev.txt
+
+      - name: Typecheck
+        run: python -m mypy
+
+      - name: Build
+        run: python -m compileall -q domingo.py tools tests
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install browser tooling
+        run: npm install --no-audit --no-fund && npx playwright install --with-deps chromium
+
+      - name: Boot check
+        shell: bash
+        run: |
+          python -u tests/fake_engine.py --port 8890 &
+          echo $! > engine.pid
+          for i in $(seq 1 40); do
+            python -c "import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://127.0.0.1:8890/health',timeout=2).status==200 else 1)" && break
+            sleep 0.5
+          done
+          DOMINGO_ENGINE_URL=http://127.0.0.1:8890 DOMINGO_ENGINE_MODEL=fake-model python tools/boot-check.py
+          kill $(cat engine.pid)
+
+      - name: Run every suite
+        shell: bash
+        env:
+          DOMINGO_PLAYWRIGHT: playwright
+        run: python tools/ci-run.py
+
+      - name: Refuse a published secret
+        shell: bash
+        run: python tools/check-secrets.py
+
+  # The next Python, allowed to fail, reported as its own job.
+  canary:
+    needs: test
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python: ["3.13"]
+    runs-on: ${{ matrix.os }}
+    continue-on-error: true
+    name: canary ${{ matrix.os }} · Python ${{ matrix.python }}
+    env:
+      DOMINGO_CI: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Install dev dependencies
+        run: python -m pip install --upgrade pip && pip install -r requirements-dev.txt
+      - name: Typecheck
+        run: python -m mypy
+      - name: Build
+        run: python -m compileall -q domingo.py tools tests
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Install browser tooling
+        run: npm install --no-audit --no-fund && npx playwright install --with-deps chromium
+      - name: Run every suite
+        shell: bash
+        env:
+          DOMINGO_PLAYWRIGHT: playwright
+        run: python tools/ci-run.py
+
+  docs:
+    runs-on: ubuntu-latest
+    name: docs and placeholders
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: README length
+        shell: bash
+        run: python -c "import sys,pathlib; n=len(pathlib.Path('README.md').read_text('utf-8').splitlines()); print('README lines:', n); sys.exit(0 if n < 250 else 'README must stay under 250 lines')"
+      - name: No placeholders, no leaked personal paths
+        shell: bash
+        run: python tools/check-secrets.py --placeholders

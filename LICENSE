@@ -1,0 +1,26 @@
+Domingo
+Copyright (c) 2026 Iulian Duminica
+
+Permission is granted, free of charge, to any person obtaining a copy of this
+software and its associated documentation files, to use, copy and share the
+software for personal, non-commercial purposes, on the terms below.
+
+1. You may run it for yourself, on machines you control.
+2. You may read the source, change it, and share your changes, as long as this
+   license text travels with the result and the result is not sold.
+3. You may not sell the software, charge for access to it, or offer it as a paid
+   hosted service.
+4. This is not an open source license as the Open Source Initiative defines one.
+   The source is published, and it is free for personal use. Say it that way.
+5. Attribution is appreciated and never required beyond keeping this notice.
+
+The software is provided as is, without warranty of any kind, express or
+implied, including the implied warranties of merchantability, fitness for a
+particular purpose and non-infringement. In no event shall the author be liable
+for any claim, damages or other liability, whether in an action of contract,
+tort or otherwise, arising from, out of or in connection with the software or
+the use of the software.
+
+Data you process with this software stays your responsibility. It relays
+prompts to a model server you run: treat anything you type as visible to
+whatever can reach that server.

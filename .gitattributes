@@ -1,0 +1,17 @@
+# Line endings: the repo stores LF, checkouts get LF, except the Windows launcher.
+* text=auto eol=lf
+*.cmd text eol=crlf
+*.bat text eol=crlf
+run.command text eol=lf
+*.sh text eol=lf
+
+# Not text
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+
+# GitHub linguist: the vendored stand-in engine is Python, the UI is one HTML file
+*.html linguist-vendored=false

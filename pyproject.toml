@@ -1,0 +1,20 @@
+[project]
+name = "domingo"
+version = "0.2.0"
+description = "A small chat client for a model server that runs on your own machine"
+requires-python = ">=3.9"
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/iulianduminica/Domingo"
+Issues = "https://github.com/iulianduminica/Domingo/issues"
+
+# The app imports the standard library only. This file exists to declare the
+# minimum Python version in one place that tools, CI and the startup check agree on.
+# Nothing here is installed at runtime.
+
+[tool.mypy]
+python_version = "3.9"
+files = ["domingo.py", "tools/boot-check.py", "tools/ci-run.py", "tools/notices.py",
+         "tests/fake_engine.py"]
+ignore_missing_imports = true
